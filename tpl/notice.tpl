@@ -3,67 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>通知邮件</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .header {
-            display: flex;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #dddddd;
-        }
-        .header img {
-            max-width: 150px;
-            margin-right: 10px;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-            color: #333333;
-        }
-        .content {
-            padding: 20px 0;
-        }
-        .highlight {
-            background-color: #ffffcc;
-            padding: 10px;
-            border-radius: 4px;
-            margin: 20px 0;
-            font-weight: bold;
-        }
-        .footer {
-            text-align: center;
-            padding: 20px 0;
-            border-top: 1px solid #dddddd;
-            color: #777777;
-            font-size: 12px;
-        }
-    </style>
 </head>
-<body>
-<div class="container">
-    <div class="header">
-        <img src="{$logo}" alt="网站Logo">
-        <h1>{$site}</h1>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+<div class="container" style="    box-sizing: border-box;width: 100%; max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    <div class="header" style="display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #dddddd;">
+        <img src="{$logo}" alt="网站Logo" style="width: 40px;height: 40px; margin-right: 10px;">
+        <h1 style="margin: 0; font-size: 24px; color: #333333;">{$site}</h1>
     </div>
-    <div class="content">
-        {$content}
+    <div class="content" style="padding: 20px 0;">
+        {$content nofilter}
     </div>
-    <div class="footer">
-        <p>© {date("Y")} {$site}. 保留所有权利。</p>
+    <div class="footer" style="text-align: center; padding: 20px 0; border-top: 1px solid #dddddd; color: #777777; font-size: 12px;">
+        <p>&copy; {date("Y")} {$site}. 保留所有权利。</p>
         <p>Ankio | 联系我们: <a href="mailto:ankio@ankio.net">ankio@ankio.net</a></p>
     </div>
 </div>

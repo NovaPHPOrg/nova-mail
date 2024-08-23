@@ -20,7 +20,7 @@ class Mail
 
         $mail = new PHPMailer(true);
 
-        $config = new MailConfig(App::getInstance()->config());
+        $config = new MailConfig(App::getInstance()->config()["mail"]);
 
         try {
             ob_start();

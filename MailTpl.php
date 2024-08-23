@@ -11,7 +11,7 @@ class MailTpl
     public function __construct()
     {
         $this->viewResponse = new ViewResponse();
-        $this->viewResponse->init("",[],false,"{","}",ROOT_PATH."src/nova/plugin/mail/tpl");
+        $this->viewResponse->init("",[],false,"{","}",ROOT_PATH."/nova/plugin/mail/tpl");
     }
 
     /**

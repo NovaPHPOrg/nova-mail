@@ -19,7 +19,7 @@ class MailConfig extends ArgObject
     public function onValidate(): void
     {
         if (!preg_match("/^smtp\..*$/", $this->host)) {
-           throw new MailException("smtp服务器填写有误");
+           throw new MailException("smtp服务器填写有误：".$this->host);
         }
         if (!filter_var($this->username, FILTER_VALIDATE_EMAIL)) {
             throw new MailException("发件人邮箱错误");
