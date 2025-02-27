@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * Copyright (c) 2025. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
@@ -9,7 +12,6 @@
 
 namespace nova\plugin\mail;
 
-
 use nova\framework\App;
 use nova\framework\log\Logger;
 use PHPMailer\PHPMailer\Exception;
@@ -18,11 +20,10 @@ use PHPMailer\PHPMailer\SMTP;
 
 class Mail
 {
- 
     /**
      * @throws MailException
      */
-    static function send($to, $toName, $title, $body): void
+    public static function send($to, $toName, $title, $body): void
     {
 
         $mail = new PHPMailer(true);
@@ -32,7 +33,7 @@ class Mail
         try {
             ob_start();
             //Server settings
-            $mail->SMTPDebug = App::getInstance()->debug?SMTP::DEBUG_SERVER:SMTP::DEBUG_OFF;                      //Enable verbose debug output
+            $mail->SMTPDebug = App::getInstance()->debug ? SMTP::DEBUG_SERVER : SMTP::DEBUG_OFF;                      //Enable verbose debug output
             $mail->isSMTP();                                            //Send using SMTP
             $mail->Host = $config->host;                     //Set the SMTP server to send through
             $mail->SMTPAuth = true;                                   //Enable SMTP authentication
@@ -42,7 +43,7 @@ class Mail
             $mail->Port = $config->port;                                  //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
             //Recipients
-            $mail->setFrom(  $config->username, $config->site);
+            $mail->setFrom($config->username, $config->site);
             $mail->addAddress($to, $toName);
 
             //Content
@@ -54,8 +55,8 @@ class Mail
 
             $data = ob_get_clean();
 
-            if(!empty($data)){
-               Logger::info($data);
+            if (!empty($data)) {
+                Logger::info($data);
             }
 
         } catch (Exception $e) {

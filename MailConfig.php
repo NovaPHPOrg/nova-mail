@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * Copyright (c) 2025. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
@@ -13,7 +16,6 @@ use nova\framework\text\ArgObject;
 
 class MailConfig extends ArgObject
 {
-
     public string $host = "";
     public string $username = "";
     public string $password = "";
@@ -26,7 +28,7 @@ class MailConfig extends ArgObject
     public function onValidate(): void
     {
         if (!preg_match("/^smtp\..*$/", $this->host)) {
-           throw new MailException("smtp服务器填写有误：".$this->host);
+            throw new MailException("smtp服务器填写有误：".$this->host);
         }
         if (!filter_var($this->username, FILTER_VALIDATE_EMAIL)) {
             throw new MailException("发件人邮箱错误");

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * Copyright (c) 2025. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
@@ -18,14 +21,15 @@ class MailTpl
     public function __construct()
     {
         $this->viewResponse = new ViewResponse();
-        $this->viewResponse->init("",[],false,"{","}",ROOT_PATH."/nova/plugin/mail/tpl");
+        $this->viewResponse->init("", [], false, "{", "}", ROOT_PATH."/nova/plugin/mail/tpl");
     }
 
     /**
      * @throws ViewException
      */
-    function notice($site, $logo, $content):string{
-      return  $this->viewResponse->asTpl("notice",false,[
+    public function notice($site, $logo, $content): string
+    {
+        return  $this->viewResponse->asTpl("notice", false, [
             "site" => $site,
             "logo" => $logo,
             "content" => $content,
