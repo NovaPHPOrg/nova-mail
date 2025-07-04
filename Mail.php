@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 namespace nova\plugin\mail;
 
-use nova\framework\App;
-use nova\framework\log\Logger;
-use PHPMailer\PHPMailer\Exception;
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
+use Exception;
+use nova\framework\core\Context;
+use nova\framework\core\Logger;
+use nova\plugin\mail\phpmail\PHPMailer;
+use nova\plugin\mail\phpmail\SMTP;
 
 class Mail
 {
@@ -28,12 +28,12 @@ class Mail
 
         $mail = new PHPMailer(true);
 
-        $config = new MailConfig(App::getInstance()->config()["mail"]);
+        $config = new MailConfig();
 
         try {
             ob_start();
             //Server settings
-            $mail->SMTPDebug = App::getInstance()->debug ? SMTP::DEBUG_SERVER : SMTP::DEBUG_OFF;                      //Enable verbose debug output
+            $mail->SMTPDebug = Context::instance()->isDebug() ? SMTP::DEBUG_SERVER : SMTP::DEBUG_OFF;                      //Enable verbose debug output
             $mail->isSMTP();                                            //Send using SMTP
             $mail->Host = $config->host;                     //Set the SMTP server to send through
             $mail->SMTPAuth = true;                                   //Enable SMTP authentication
@@ -47,7 +47,7 @@ class Mail
             $mail->addAddress($to, $toName);
 
             //Content
-            $mail->isHTML(true);                                  //Set email format to HTML
+            $mail->isHTML();                                  //Set email format to HTML
             $mail->Subject = $title;
             $mail->Body = $body;
 

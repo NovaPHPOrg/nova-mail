@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace nova\plugin\mail;
 
-use nova\framework\text\ArgObject;
+use nova\framework\core\ConfigObject;
 
-class MailConfig extends ArgObject
+class MailConfig extends ConfigObject
 {
     public string $host = "";
     public string $username = "";
@@ -36,7 +36,7 @@ class MailConfig extends ArgObject
         if (empty($this->password)) {
             throw new MailException("密码不允许为空");
         }
-        if (!preg_match("/^(?:6553[0-5]|655[0-2]\d|65[0-4]\d{2}|6[0-4]\d{3}|[1-5]\d{4}|[1-9]\d{0,3}|[1-9])$/", $this->port)) {
+        if (!preg_match("/^(?:6553[0-5]|655[0-2]\d|65[0-4]\d{2}|6[0-4]\d{3}|[1-5]\d{4}|[1-9]\d{0,3}|[1-9])$/", (string)$this->port)) {
             throw new MailException("端口范围错误");
         }
     }
