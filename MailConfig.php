@@ -20,6 +20,7 @@ class MailConfig extends ConfigObject
     public string $username = "";
     public string $password = "";
     public int $port = 0;
+    public string $site = "";
 
     /**
      * @throws MailException
