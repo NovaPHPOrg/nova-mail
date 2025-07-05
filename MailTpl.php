@@ -29,7 +29,7 @@ class MailTpl
      */
     public function notice($site, $logo, $content): string
     {
-        return  $this->viewResponse->asTpl("notice", false, [
+        return  $this->viewResponse->asTpl("notice", [
             "site" => $site,
             "logo" => $logo,
             "content" => $content,
