@@ -12,9 +12,10 @@ declare(strict_types=1);
 
 namespace nova\plugin\mail;
 
+use function nova\framework\config;
+
 use nova\plugin\tpl\ViewException;
 use nova\plugin\tpl\ViewResponse;
-use function nova\framework\config;
 
 class MailTpl
 {
