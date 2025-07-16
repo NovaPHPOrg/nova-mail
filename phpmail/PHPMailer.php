@@ -3372,7 +3372,7 @@ class PHPMailer
             $lookBack = 0;
             do {
                 $offset = $avgLength - $lookBack;
-                $chunk = mb_substr($str, $i, $offset, $this->CharSet);
+                $chunk = mb_substr($str, $i, (int)$offset, $this->CharSet);
                 $chunk = base64_encode($chunk);
                 ++$lookBack;
             } while (strlen($chunk) > $length);

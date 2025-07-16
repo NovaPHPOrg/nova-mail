@@ -21,6 +21,7 @@ class MailConfig extends ConfigObject
     public string $password = "";
     public int $port = 0;
     public string $site = "";
+    public string $defaultRecipient = "";
 
     /**
      * @throws MailException
@@ -38,6 +39,10 @@ class MailConfig extends ConfigObject
         }
         if (!preg_match("/^(?:6553[0-5]|655[0-2]\d|65[0-4]\d{2}|6[0-4]\d{3}|[1-5]\d{4}|[1-9]\d{0,3}|[1-9])$/", (string)$this->port)) {
             throw new MailException("端口范围错误");
+        }
+        // 验证默认邮件接收人格式（如果填写了的话）
+        if (!empty($this->defaultRecipient) && !filter_var($this->defaultRecipient, FILTER_VALIDATE_EMAIL)) {
+            throw new MailException("默认邮件接收人格式错误");
         }
     }
 

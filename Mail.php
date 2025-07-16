@@ -12,14 +12,101 @@ declare(strict_types=1);
 
 namespace nova\plugin\mail;
 
-use Exception;
 use nova\framework\core\Context;
 use nova\framework\core\Logger;
+use nova\framework\core\StaticRegister;
+use nova\framework\event\EventManager;
+use nova\framework\exception\AppExitException;
+use nova\framework\http\Response;
+use nova\plugin\mail\phpmail\Exception;
 use nova\plugin\mail\phpmail\PHPMailer;
 use nova\plugin\mail\phpmail\SMTP;
+use nova\plugin\tpl\ViewException;
 
-class Mail
+class Mail extends StaticRegister
 {
+    const string MAIL_CONFIG_TPL = ROOT_PATH . DS . 'nova' . DS . 'plugin' . DS . 'mail' . DS . 'tpl' . DS . 'config';
+
+    public static function registerInfo(): void
+    {
+        EventManager::addListener("route.before", function ($event, &$data) {
+            if (!class_exists('\nova\plugin\cookie\Session') || !class_exists('\nova\plugin\login\LoginManager')) {
+                return;
+            }
+            \nova\plugin\cookie\Session::getInstance()->start();
+            if (!\nova\plugin\login\LoginManager::getInstance()->checkLogin()) {
+                return;
+            }
+            // 邮件配置
+            if ($data == "/mail/config") {
+                Mail::handleConfig();
+            } elseif ($data == "/mail/test") {
+                Mail::handleTest();
+            }
+        });
+    }
+
+    /**
+     * 处理邮件配置请求
+     * @throws AppExitException
+     */
+    private static function handleConfig(): void
+    {
+
+        $mailConfig = new MailConfig();
+
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+            throw new AppExitException(Response::asJson([
+                'code' => 200,
+                'data' => get_object_vars($mailConfig),
+            ]));
+        } else {
+            $data = $_POST;
+            $mailConfig->host = $data['host'] ?? $mailConfig->host;
+            $mailConfig->port = (int)($data['port'] ?? $mailConfig->port);
+            $mailConfig->username = $data['username'] ?? $mailConfig->username;
+            $mailConfig->password = $data['password'] ?? $mailConfig->password;
+            $mailConfig->site = $data['site'] ?? $mailConfig->site;
+            $mailConfig->defaultRecipient = $data['defaultRecipient'] ?? $mailConfig->defaultRecipient;
+            throw new AppExitException(Response::asJson([
+                'code' => 200,
+                'msg' => '邮件配置保存成功'
+            ]));
+        }
+
+    }
+    /**
+     * 处理测试邮件请求
+     * @throws AppExitException|ViewException
+     */
+    private static function handleTest(): void
+    {
+        try {
+            $config = new MailConfig();
+            $recipient = !empty($config->defaultRecipient) ? $config->defaultRecipient : $config->username;
+
+            // 使用MailTpl构建邮件内容
+            $mailTpl = new MailTpl();
+            $logo = "data:image/svg+xml;base64," . base64_encode('<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>');
+            $content = "<h2>邮件测试</h2><p>这是一封测试邮件，用于验证邮件配置是否正确。</p><p>如果您收到了这封邮件，说明邮件配置已经正确设置。</p>";
+
+            $htmlBody = $mailTpl->notice($logo, $content);
+
+            // 使用新的send函数发送邮件
+            self::send($recipient, '', '邮件测试 - ' . ($config->site ?: '系统'), $htmlBody);
+
+            throw new AppExitException(Response::asJson([
+                'code' => 200,
+                'msg' => '测试邮件发送成功'
+            ]));
+
+        } catch (MailException $e) {
+            throw new AppExitException(Response::asJson([
+                'code' => 500,
+                'msg' => '邮件配置错误: ' . $e->getMessage()
+            ]));
+        }
+    }
     /**
      * @throws MailException
      */
@@ -63,5 +150,4 @@ class Mail
             throw new MailException($mail->ErrorInfo);
         }
     }
-
 }

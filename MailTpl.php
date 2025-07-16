@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace nova\plugin\mail;
 
+use app\Application;
+
 use function nova\framework\config;
 
 use nova\plugin\tpl\ViewException;
@@ -32,7 +34,7 @@ class MailTpl
     public function notice($logo, $content): string
     {
         return  $this->viewResponse->asTpl("notice", [
-            "site" => config("mail.site") ?? "",
+            "site" => config("mail.site") ?? Application::SYSTEM_NAME,
             "logo" => $logo,
             "content" => $content,
         ])->getData();
