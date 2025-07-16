@@ -22,6 +22,7 @@ use nova\plugin\mail\phpmail\Exception;
 use nova\plugin\mail\phpmail\PHPMailer;
 use nova\plugin\mail\phpmail\SMTP;
 use nova\plugin\tpl\ViewException;
+use function nova\framework\dump;
 
 class Mail extends StaticRegister
 {
@@ -30,11 +31,16 @@ class Mail extends StaticRegister
     public static function registerInfo(): void
     {
         EventManager::addListener("route.before", function ($event, &$data) {
-            if (!class_exists('\nova\plugin\cookie\Session') || !class_exists('\nova\plugin\login\LoginManager')) {
+            if (!class_exists('\nova\plugin\cookie\Session')) {
                 return;
             }
             \nova\plugin\cookie\Session::getInstance()->start();
-            if (!\nova\plugin\login\LoginManager::getInstance()->checkLogin()) {
+            if (class_exists('\nova\plugin\login\LoginManager')) {
+                $user = \nova\plugin\login\LoginManager::getInstance()->checkLogin();
+            } else {
+                $user = \nova\plugin\cookie\Session::getInstance()->get("user");
+            }
+            if (!$user || $user->id != 1) {
                 return;
             }
             // 邮件配置
@@ -75,6 +81,7 @@ class Mail extends StaticRegister
         }
 
     }
+
     /**
      * 处理测试邮件请求
      * @throws AppExitException|ViewException
@@ -107,6 +114,7 @@ class Mail extends StaticRegister
             ]));
         }
     }
+
     /**
      * @throws MailException
      */
