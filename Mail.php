@@ -22,7 +22,6 @@ use nova\plugin\mail\phpmail\Exception;
 use nova\plugin\mail\phpmail\PHPMailer;
 use nova\plugin\mail\phpmail\SMTP;
 use nova\plugin\tpl\ViewException;
-use function nova\framework\dump;
 
 class Mail extends StaticRegister
 {
