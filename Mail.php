@@ -33,7 +33,6 @@ class Mail extends StaticRegister
             if (!class_exists('\nova\plugin\cookie\Session')) {
                 return;
             }
-            \nova\plugin\cookie\Session::getInstance()->start();
             if (class_exists('\nova\plugin\login\LoginManager')) {
                 $user = \nova\plugin\login\LoginManager::getInstance()->checkLogin();
             } else {
