@@ -60,6 +60,9 @@ class Mail extends StaticRegister
     public static function registerInfo(): void
     {
         EventManager::addListener("route.before", function ($event, &$data) {
+            if (!str_starts_with($data, '/mail')) {
+                return;
+            }
             // 检查Session插件是否可用
             if (!class_exists('\nova\plugin\cookie\Session')) {
                 return;
