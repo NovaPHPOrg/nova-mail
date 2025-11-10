@@ -114,12 +114,11 @@
 
         // 处理渠道状态开关变化
         $("#testMail").on("click", function() {
-            let loading = new Loading(document.body,"测试中");
-            loading.show();
+            $('#container').showLoading('测试中');
             $.request.postForm("/mail/test", {
 
             },function (data) {
-                loading.close();
+                $('#container').closeLoading();
                 if (data.code === 200){
                     $.toaster.success("测试成功")
                 }else{
