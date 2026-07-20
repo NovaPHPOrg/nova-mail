@@ -22,8 +22,8 @@
     }
 </style>
 
-<div id="container" class="container">
-    <div class="row col-space16 p-4">
+<div id="container" class="container p-4">
+    <div class="row col-space16">
         <div class="col-xs12 title-large center-vertical mb-4">
             <mdui-icon name="mail" class="mr-2"></mdui-icon>
             <span>邮件配置</span>
@@ -102,35 +102,4 @@
     </div>
 </div>
 
-<script id="script">
-    window.pageLoadFiles = [
-        'Form'
-    ];
-
-    window.pageOnLoad = function (loading) {
-
-        $.form.manage("/mail/config","#mailForm");
-
-
-        // 处理渠道状态开关变化
-        $("#testMail").on("click", function() {
-            $('#container').showLoading('测试中');
-            $.request.postForm("/mail/test", {
-
-            },function (data) {
-                $('#container').closeLoading();
-                if (data.code === 200){
-                    $.toaster.success("测试成功")
-                }else{
-                    $.toaster.error(data.msg)
-                }
-
-            });
-        });
-
-        window.pageOnUnLoad = function () {
-            // 页面卸载时的清理工作
-        };
-
-    };
-</script>
+<script id="script" src="/mail/static/js/config.js?v={$__v}"></script>
